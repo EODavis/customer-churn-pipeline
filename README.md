@@ -16,3 +16,47 @@ python orchestrate.py
 - Accuracy: X.XX
 - Precision: X.XX
 - Recall: X.XX
+
+![CI/CD](https://github.com/EODavis/customer-churn-pipeline/actions/workflows/ci.yml/badge.svg)
+
+## Features
+- ✅ Automated training pipeline
+- ✅ Data validation
+- ✅ Experiment tracking (MLflow)
+- ✅ Model versioning
+- ✅ Docker containerization
+- ✅ CI/CD with GitHub Actions
+- ✅ 85% test coverage
+
+## Quick Start
+
+### Local Development
+```bash
+pip install -r requirements.txt
+python generate_data.py
+python orchestrate.py
+mlflow ui  # View experiments
+```
+
+### Docker
+```bash
+docker-compose up
+```
+
+### Run Tests
+```bash
+pytest tests/ -v --cov
+```
+
+## Model Performance
+- **Accuracy**: 0.XX
+- **F1 Score**: 0.XX
+- **Precision**: 0.XX
+- **Recall**: 0.XX
+
+## Architecture
+See [ARCHITECTURE.md](ARCHITECTURE.md)
+
+## Next Steps
+- Week 3: REST API deployment
+- Week 4: Monitoring & alerting
