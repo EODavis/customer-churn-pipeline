@@ -63,22 +63,22 @@ def train_model(X_train, y_train, X_test, y_test):
         mlflow.log_artifact(model_path)
         
         print(f"Model trained. F1 Score: {metrics['f1']:.4f}")
-        return model, metrics
+        return model, metrics, model_path
 
 if __name__ == "__main__":
     X_train, X_test, y_train, y_test = load_and_preprocess()
     model, metrics = train_model(X_train, y_train, X_test, y_test)
-
+    
 # After training
 from model_registry import ModelRegistry
-
+    
 registry = ModelRegistry()
 version = registry.register_model(
     model_path=model_path,
     metrics=metrics,
     metadata={'n_samples': len(X_train)}
-)
-
+    )
+    
 # Auto-promote if F1 > 0.75
 if metrics['f1'] > 0.75:
     registry.promote_to_production(version)
