@@ -24,11 +24,11 @@ services:
       - MLFLOW_TRACKING_URI=http://mlflow:5000
     depends_on:
       - mlflow
-```
+
 
 ### Update `requirements.txt`
 Add testing dependencies:
-```
+
 mlflow==2.9.2
 dvc==3.38.1
 prefect==2.14.10
