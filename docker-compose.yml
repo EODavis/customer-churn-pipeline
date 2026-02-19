@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mlflow:
+    image: python:3.10-slim
+    command: >
+      sh -c "pip install mlflow==2.9.2 &&
+             mlflow server --host 0.0.0.0 --port 5000 
+             --backend-store-uri sqlite:///mlflow.db 
+             --default-artifact-root ./mlruns"
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlflow_data:/mlflow
+    working_dir: /mlflow
+
+  training-pipeline:
+    build: .
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./mlflow.db:/app/mlflow.db
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    depends_on:
+      - mlflow
+```
+
+### Update `requirements.txt`
+Add testing dependencies:
+```
+mlflow==2.9.2
+dvc==3.38.1
+prefect==2.14.10
+scikit-learn==1.3.2
+pandas==2.1.4
+great-expectations==0.18.8
+pytest==7.4.3
+pytest-cov==4.1.0
