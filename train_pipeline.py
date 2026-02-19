@@ -67,7 +67,7 @@ def train_model(X_train, y_train, X_test, y_test):
 
 if __name__ == "__main__":
     X_train, X_test, y_train, y_test = load_and_preprocess()
-    model, metrics = train_model(X_train, y_train, X_test, y_test)
+    model, metrics, model_path = train_model(X_train, y_train, X_test, y_test)
     
 # After training
 from model_registry import ModelRegistry
