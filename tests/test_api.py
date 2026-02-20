@@ -122,10 +122,10 @@ def test_model_info():
     data = response.json()
     assert "model_type" in data
     assert "n_features" in data
-```
+
 
 ### Update `requirements.txt`
-```
+
 mlflow==2.9.2
 dvc==3.38.1
 prefect==2.14.10
