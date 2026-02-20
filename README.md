@@ -81,3 +81,37 @@ prediction = client.predict(customer_data)
 - P95 latency: <50ms
 - Throughput: 100+ req/s
 - Uptime: 99.9%
+
+
+## Monitoring & Operations
+
+### Metrics & Dashboards
+```bash
+docker-compose up -d
+# Grafana: http://localhost:3000
+# Prometheus: http://localhost:9090
+```
+
+### Data Drift Detection
+- Automated drift monitoring every 6 hours
+- Alerts when drift score > 0.15
+- KS test on all numerical features
+
+### Automated Retraining
+**Triggers:**
+- Data drift detected
+- Performance degradation
+- Weekly schedule
+
+**Process:**
+1. Validate new data
+2. Retrain model
+3. Evaluate performance
+4. Deploy if improved
+5. Send alerts
+
+### Performance
+- P95 latency: <50ms
+- Uptime: 99.9%
+- Drift detection: Real-time
+- Retraining: Automated
