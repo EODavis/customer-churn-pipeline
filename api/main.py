@@ -177,3 +177,36 @@ async def model_info():
             "contract_type_encoded", "payment_method_encoded"
         ]
     }
+
+from fastapi import FastAPI, HTTPException, Response
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
+from api.metrics import (
+    track_prediction_metrics,
+    active_model_version,
+    data_drift_score
+)
+
+# ... existing imports ...
+
+@app.get("/metrics")
+async def metrics():
+    """Prometheus metrics endpoint"""
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+@app.post("/predict", response_model=PredictionResponse)
+@track_prediction_metrics  # Add decorator
+async def predict_churn(customer: CustomerFeatures):
+    # ... existing code ...
+    pass
+
+# Set model version on startup
+@app.on_event("startup")
+async def load_model():
+    global model, contract_encoder, payment_encoder
+    # ... existing code ...
+    
+    # Set model version metric
+    model_files = [f for f in os.listdir('models') if f.startswith('churn_model_') and f.endswith('.pkl')]
+    if model_files:
+        version = len(model_files)
+        active_model_version.set(version)
