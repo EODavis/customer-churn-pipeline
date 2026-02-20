@@ -1,0 +1,52 @@
+{
+  "dashboard": {
+    "title": "Churn Prediction API Dashboard",
+    "panels": [
+      {
+        "title": "Predictions per Minute",
+        "targets": [
+          {
+            "expr": "rate(churn_predictions_total[1m])"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "title": "P95 Latency",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(churn_prediction_latency_seconds_bucket[5m]))"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "title": "Predictions by Risk Level",
+        "targets": [
+          {
+            "expr": "churn_predictions_total"
+          }
+        ],
+        "type": "pie"
+      },
+      {
+        "title": "Error Rate",
+        "targets": [
+          {
+            "expr": "rate(churn_api_errors_total[5m])"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "title": "Data Drift Score",
+        "targets": [
+          {
+            "expr": "churn_data_drift_score"
+          }
+        ],
+        "type": "gauge"
+      }
+    ]
+  }
+}
