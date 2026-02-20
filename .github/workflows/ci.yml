@@ -5,9 +5,6 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
-  schedule:
-    # Run weekly on Monday at 9 AM UTC
-    - cron: '0 9 * * 1'
 
 jobs:
   test:
@@ -21,27 +18,26 @@ jobs:
       with:
         python-version: '3.10'
     
-    - name: Cache pip packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
-    - name: Generate test data
-      run: python generate_data.py
+    - name: Create directories
+      run: |
+        mkdir -p data/raw data/processed models
     
     - name: Run tests
-      run: pytest tests/ -v --cov=. --cov-report=xml
+      env:
+        MLFLOW_TRACKING_URI: ""
+      run: |
+        pytest tests/ -v --cov=. --cov-report=xml --cov-report=term
     
     - name: Upload coverage
       uses: codecov/codecov-action@v3
       with:
         file: ./coverage.xml
+        fail_ci_if_error: false
 
   train:
     needs: test
@@ -60,6 +56,10 @@ jobs:
       run: |
         pip install -r requirements.txt
     
+    - name: Create directories
+      run: |
+        mkdir -p data/raw data/processed models
+    
     - name: Generate data
       run: python generate_data.py
     
@@ -69,11 +69,14 @@ jobs:
     - name: Train model
       run: python train_pipeline.py
     
+    - name: List model files
+      run: ls -la models/
+    
     - name: Upload model artifact
       uses: actions/upload-artifact@v3
       with:
-        name: trained-model
-        path: models/
+        name: trained-model-${{ github.sha }}
+        path: models/*.pkl
         retention-days: 30
 
   build-docker:
@@ -91,12 +94,3 @@ jobs:
       run: |
         docker build -t churn-pipeline:${{ github.sha }} .
         docker tag churn-pipeline:${{ github.sha }} churn-pipeline:latest
-    
-    - name: Save Docker image
-      run: docker save churn-pipeline:latest | gzip > churn-pipeline.tar.gz
-    
-    - name: Upload Docker image
-      uses: actions/upload-artifact@v3
-      with:
-        name: docker-image
-        path: churn-pipeline.tar.gz
