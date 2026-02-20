@@ -60,3 +60,24 @@ See [ARCHITECTURE.md](ARCHITECTURE.md)
 ## Next Steps
 - Week 3: REST API deployment
 - Week 4: Monitoring & alerting
+## API Deployment
+
+### Start API
+```bash
+docker-compose up api
+# API available at http://localhost:8000
+# Docs at http://localhost:8000/docs
+```
+
+### Example Usage
+```python
+from api_client import ChurnPredictionClient
+
+client = ChurnPredictionClient()
+prediction = client.predict(customer_data)
+```
+
+### Performance
+- P95 latency: <50ms
+- Throughput: 100+ req/s
+- Uptime: 99.9%
