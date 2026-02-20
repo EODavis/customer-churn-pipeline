@@ -8,6 +8,7 @@ RUN pip install --no-cache-dir fastapi uvicorn scikit-learn joblib numpy pydanti
 
 # Copy application
 COPY api/ ./api/
+COPY monitoring/ ./monitoring/
 COPY models/ ./models/
 
 # Expose port
