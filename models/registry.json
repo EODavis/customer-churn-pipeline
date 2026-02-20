@@ -1,0 +1,20 @@
+{
+  "models": [
+    {
+      "version": 1,
+      "path": "models/churn_model_20260220_124936.pkl",
+      "metrics": {
+        "accuracy": 0.6347,
+        "precision": 0.5626822157434402,
+        "recall": 0.42995049504950494,
+        "f1": 0.48744212150975164
+      },
+      "timestamp": "2026-02-20T12:49:36.688359",
+      "metadata": {
+        "n_samples": 40000
+      },
+      "status": "staging"
+    }
+  ],
+  "production": null
+}
