@@ -22,22 +22,33 @@ services:
       - "8000:8000"
     volumes:
       - ./models:/app/models
+      - ./data:/app/data
     environment:
       - MODEL_PATH=/app/models/churn_model_latest.pkl
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
-
-  training-pipeline:
-    build: .
-    volumes:
-      - ./data:/app/data
-      - ./models:/app/models
-      - ./mlflow.db:/app/mlflow.db
-    environment:
-      - MLFLOW_TRACKING_URI=http://mlflow:5000
     depends_on:
-      - mlflow
+      - prometheus
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./monitoring/grafana-dashboard.json:/etc/grafana/provisioning/dashboards/dashboard.json
+    depends_on:
+      - prometheus
+
+volumes:
+  grafana-storage:
