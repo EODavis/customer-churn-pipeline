@@ -94,3 +94,47 @@ jobs:
       run: |
         docker build -t churn-pipeline:${{ github.sha }} .
         docker tag churn-pipeline:${{ github.sha }} churn-pipeline:latest
+test-api:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Setup models
+      run: |
+        mkdir -p models data/raw
+        python generate_data.py
+        python train_pipeline.py
+    
+    - name: Test API
+      run: |
+        pytest tests/test_api.py -v
+```
+
+### Project Structure
+```
+customer-churn-pipeline/
+├── api/
+│   ├── __init__.py
+│   └── main.py
+├── tests/
+│   ├── test_pipeline.py
+│   ├── test_api.py
+│   ├── load_test.py
+│   └── performance_benchmark.py
+├── docs/
+│   └── API.md
+├── api_client.py
+├── Dockerfile.api
+├── docker-compose.yml
+└── requirements.txt
