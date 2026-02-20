@@ -126,15 +126,3 @@ def test_model_info():
 
 ### Update `requirements.txt`
 
-mlflow==2.9.2
-dvc==3.38.1
-prefect==2.14.10
-scikit-learn==1.3.2
-pandas==2.1.4
-great-expectations==0.18.8
-pytest==7.4.3
-pytest-cov==4.1.0
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-httpx==0.25.2
-locust==2.19.1
